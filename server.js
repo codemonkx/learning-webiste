@@ -18,26 +18,30 @@ const securityLogger = require('./middleware/securityLogger');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// 1. Logging (Diagnostic)
-app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} - IP: ${req.ip}`);
-    next();
-});
-
-// 2. Serve static files (MOVE TO TOP to bypass middleware issues)
+// 1. Serve static files (Efficiently)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 3. Security Logging (Early middleware)
+// 2. Security Logging
 app.use(securityLogger);
 
-// 4. Disable Helmet for Troubleshooting
-// app.use(helmet()); 
+// 3. Security Middleware (Production Ready)
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+            "script-src": ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+            "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+            "font-src": ["'self'", "https://fonts.gstatic.com"],
+            "img-src": ["'self'", "data:", "https://images.unsplash.com"],
+        },
+    },
+}));
 
-// 5. Middleware
+// 4. Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// 6. Session configuration
+// 5. Session configuration
 app.use(session({
     secret: process.env.SESSION_SECRET || 'your_secret_key_change_this',
     resave: false,
@@ -45,7 +49,7 @@ app.use(session({
     cookie: {
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production' // Set to true if using HTTPS
+        secure: process.env.NODE_ENV === 'production'
     }
 }));
 
