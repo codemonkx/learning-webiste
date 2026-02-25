@@ -23,12 +23,7 @@ app.use(securityLogger);
 
 // Security Middleware (Headers)
 app.use(helmet({
-    contentSecurityPolicy: {
-        directives: {
-            ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-            "img-src": ["'self'", "data:", "https://images.unsplash.com"],
-        },
-    },
+    contentSecurityPolicy: false, // Temporarily disabled for troubleshooting
 }));
 
 // Middleware
