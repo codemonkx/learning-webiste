@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Mini Learning Portal</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <nav>
+        <div class="container">
+            <div class="logo">LearnHub</div>
+            <ul>
+                <li><a href="/">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container" style="max-width: 500px; margin-top: 3rem;">
+        <div class="card">
+            <h1 class="text-center mb-2">Admin Access</h1>
+            <p class="text-center text-muted mb-3">Authorized personnel only</p>
+
+            <div class="alert alert-info mb-2">
+                <strong>Security Notice:</strong> All admin login attempts are logged and monitored.
+            </div>
+
+            <form id="admin-login-form">
+                <div class="form-group">
+                    <label class="form-label" for="username">Admin Username</label>
+                    <input type="text" id="username" name="username" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Admin Password</label>
+                    <input type="password" id="password" name="password" class="form-input" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Admin Login</button>
+            </form>
+
+            <p class="text-center mt-2 text-muted" style="font-size: 0.875rem;">
+                Regular user? <a href="/login">Login here</a>
+            </p>
+        </div>
+    </main>
+
+    <script src="/js/main.js"></script>
+    <script>
+        document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const data = await utils.apiCall('/admin/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ username, password })
+                });
+
+                utils.showAlert('Admin login successful! Redirecting...', 'success');
+                setTimeout(() => {
+                    window.location.href = '/admin/dashboard';
+                }, 1000);
+            } catch (error) {
+                utils.showAlert(error.message || 'Admin login failed', 'error');
+            }
+        });
+    </script>
+</body>
+
+</html>

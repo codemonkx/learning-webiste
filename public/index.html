@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearnHub - Your Shortcut to Mastery</title>
+  <meta name="description"
+    content="Transform your career with expert-led courses. Learn programming, design, business, and more.">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="/" class="navbar-brand">⚡ LearnHub</a>
+      <ul class="navbar-menu">
+        <li><a href="/courses.html">Courses</a></li>
+        <li><a href="/search.html">Search</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <a href="/login.html" class="btn btn-secondary btn-small">Sign In</a>
+        <a href="/register.html" class="btn btn-primary btn-small">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Your Shortcut to Mastery</h1>
+      <p>Learn from world-class instructors. Master in-demand skills. Transform your career with our premium courses.
+      </p>
+      <div class="hero-actions">
+        <a href="/courses.html" class="btn btn-primary btn-large">Explore Courses →</a>
+        <a href="/register.html" class="btn btn-secondary btn-large">Start Free Trial</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="totalCourses">0</div>
+        <div class="stat-label">Expert Courses</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">50K+</div>
+        <div class="stat-label">Active Students</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">4.9★</div>
+        <div class="stat-label">Average Rating</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">24/7</div>
+        <div class="stat-label">Support</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured Courses Section -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Featured Courses</h2>
+        <p class="section-subtitle">Hand-picked courses from industry experts to accelerate your learning</p>
+      </div>
+
+      <div class="grid grid-3" id="featuredCourses">
+        <div style="grid-column: 1 / -1; text-align: center; padding: 60px 0;">
+          <div class="spinner" style="margin: 0 auto;"></div>
+          <p style="margin-top: 20px; color: var(--text-secondary);">Loading courses...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- All Courses Section -->
+  <section class="section"
+    style="background: var(--bg-secondary); margin: 0 -100vw; padding-left: 100vw; padding-right: 100vw;">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">All Courses</h2>
+        <p class="section-subtitle">Browse our complete catalog of premium courses</p>
+      </div>
+
+      <!-- Category Filters -->
+      <div class="filters" id="categoryFilters">
+        <button class="filter-btn active" data-category="all">All</button>
+        <button class="filter-btn" data-category="Programming">Programming</button>
+        <button class="filter-btn" data-category="Design">Design</button>
+        <button class="filter-btn" data-category="Business">Business</button>
+        <button class="filter-btn" data-category="Marketing">Marketing</button>
+        <button class="filter-btn" data-category="Data Science">Data Science</button>
+      </div>
+
+      <!-- Course Count -->
+      <div style="text-align: center; margin-bottom: var(--space-xl);">
+        <p style="font-size: 0.9375rem; color: var(--text-secondary);">
+          Showing <span id="allCourseCount" style="font-weight: 700; color: var(--primary);">0</span> courses
+        </p>
+      </div>
+
+      <div class="grid grid-3" id="allCourses">
+        <div style="grid-column: 1 / -1; text-align: center; padding: 60px 0;">
+          <div class="spinner" style="margin: 0 auto;"></div>
+          <p style="margin-top: 20px; color: var(--text-secondary);">Loading courses...</p>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: var(--space-xl);">
+        <a href="/courses.html" class="btn btn-secondary">View All Courses →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Browse by Category</h2>
+        <p class="section-subtitle">Explore our diverse range of expertly curated categories</p>
+      </div>
+
+      <div class="grid grid-4">
+        <div class="course-card" onclick="window.location.href='/courses.html?category=Programming'"
+          style="cursor: pointer;">
+          <div class="course-image">💻</div>
+          <div class="course-body">
+            <div class="course-category">Programming</div>
+            <h3 class="course-title">Programming</h3>
+            <p class="course-description">Master coding with Python, JavaScript, React, and more</p>
+          </div>
+        </div>
+
+        <div class="course-card" onclick="window.location.href='/courses.html?category=Design'"
+          style="cursor: pointer;">
+          <div class="course-image">🎨</div>
+          <div class="course-body">
+            <div class="course-category">Design</div>
+            <h3 class="course-title">Design</h3>
+            <p class="course-description">UI/UX, graphic design, and creative tools mastery</p>
+          </div>
+        </div>
+
+        <div class="course-card" onclick="window.location.href='/courses.html?category=Business'"
+          style="cursor: pointer;">
+          <div class="course-image">💼</div>
+          <div class="course-body">
+            <div class="course-category">Business</div>
+            <h3 class="course-title">Business</h3>
+            <p class="course-description">Entrepreneurship, management, and strategy</p>
+          </div>
+        </div>
+
+        <div class="course-card" onclick="window.location.href='/courses.html?category=Marketing'"
+          style="cursor: pointer;">
+          <div class="course-image">📱</div>
+          <div class="course-body">
+            <div class="course-category">Marketing</div>
+            <h3 class="course-title">Marketing</h3>
+            <p class="course-description">Digital marketing, SEO, and social media growth</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p class="footer-text">&copy; 2026 LearnHub. Empowering learners worldwide.</p>
+    </div>
+  </footer>
+
+  <script src="/js/nav.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    let allCoursesData = [];
+    let currentCategory = 'all';
+
+    const instructorNames = ['Sarah Johnson', 'Michael Chen', 'Emily Rodriguez', 'David Kim', 'Jessica Lee', 'Alex Thompson'];
+
+    async function loadCourses() {
+      try {
+        const response = await fetch('/api/courses');
+        const data = await response.json();
+        allCoursesData = data.courses;
+
+        document.getElementById('totalCourses').textContent = data.courses.length;
+
+        // Load featured courses
+        const featured = data.courses.filter(c => c.featured).slice(0, 6);
+        displayFeaturedCourses(featured);
+
+        // Load all courses
+        displayAllCourses(allCoursesData);
+
+      } catch (error) {
+        console.error('Error loading courses:', error);
+        document.getElementById('featuredCourses').innerHTML =
+          '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary);">Unable to load courses.</p>';
+        document.getElementById('allCourses').innerHTML =
+          '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary);">Unable to load courses.</p>';
+      }
+    }
+
+    function displayFeaturedCourses(courses) {
+      const grid = document.getElementById('featuredCourses');
+
+      if (courses.length === 0) {
+        grid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary);">No featured courses available.</p>';
+        return;
+      }
+
+      grid.innerHTML = courses.map((course, index) => createCourseCard(course, index, true)).join('');
+    }
+
+    function displayAllCourses(courses) {
+      const grid = document.getElementById('allCourses');
+      document.getElementById('allCourseCount').textContent = courses.length;
+
+      if (courses.length === 0) {
+        grid.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary);">No courses found.</p>';
+        return;
+      }
+
+      // Show first 9 courses
+      const displayCourses = courses.slice(0, 9);
+      grid.innerHTML = displayCourses.map((course, index) => createCourseCard(course, index, false)).join('');
+    }
+
+    function createCourseCard(course, index, showFeatured) {
+      const instructor = instructorNames[index % instructorNames.length];
+      const rating = (4.5 + Math.random() * 0.5).toFixed(1);
+      const students = Math.floor(Math.random() * 5000) + 1000;
+      const courseImage = getCourseImage(course.category, course.id);
+
+      return `
+                <div class="course-card" onclick="window.location.href='/courses/${course.id}'">
+                    <div class="course-image" style="background-image: url('${courseImage}'); background-size: cover; background-position: center;">
+                        ${showFeatured && course.featured ? '<span class="badge badge-featured course-badge">Featured</span>' : ''}
+                    </div>
+                    <div class="course-body">
+                        <div class="course-category">${course.category}</div>
+                        <h3 class="course-title">${course.title}</h3>
+                        <p class="course-description">${course.description.substring(0, 100)}...</p>
+                        <div class="course-meta">
+                            <span class="badge badge-primary">${course.level}</span>
+                            <span class="badge badge-secondary">${students.toLocaleString()} students</span>
+                            ${course.duration ? `<span class="badge badge-secondary">⏱️ ${course.duration}</span>` : ''}
+                        </div>
+                        <div class="course-footer">
+                            <div class="course-instructor">
+                                <div class="instructor-avatar">${course.instructor_name ? course.instructor_name.charAt(0) : instructor.charAt(0)}</div>
+                                <span class="instructor-name">${course.instructor_name || instructor}</span>
+                            </div>
+                            <div class="course-rating">★ ${course.rating || rating}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+    }
+
+    function getCourseImage(category, courseId) {
+      // Map categories to Unsplash search terms
+      const imageMap = {
+        'web': `https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=450&fit=crop`,
+        'data': `https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=450&fit=crop`,
+        'security': `https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&h=450&fit=crop`,
+        'database': `https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=800&h=450&fit=crop`,
+        'cloud': `https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=450&fit=crop`,
+        'Programming': `https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=450&fit=crop`,
+        'Design': `https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=450&fit=crop`,
+        'Business': `https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=450&fit=crop`,
+        'Marketing': `https://images.unsplash.com/photo-1432888622747-4eb9a8f2c293?w=800&h=450&fit=crop`,
+        'Data Science': `https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=450&fit=crop`,
+        'Photography': `https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=800&h=450&fit=crop`,
+        'Music': `https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=800&h=450&fit=crop`
+      };
+      return imageMap[category] || `https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=450&fit=crop`;
+    }
+
+    function filterAllCourses() {
+      let filtered = allCoursesData;
+
+      if (currentCategory !== 'all') {
+        filtered = filtered.filter(c => c.category === currentCategory);
+      }
+
+      displayAllCourses(filtered);
+    }
+
+    document.querySelectorAll('[data-category]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-category]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = btn.dataset.category;
+        filterAllCourses();
+      });
+    });
+
+    loadCourses();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Details - Mini Learning Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="/" class="navbar-brand">⚡ LearnHub</a>
+      <ul class="navbar-menu">
+        <li><a href="/">Home</a></li>
+        <li><a href="/courses.html">Courses</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <a href="/login.html" class="btn btn-secondary btn-small">Sign In</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container" style="margin-top: 2rem;">
+    <div id="course-details">
+      <div class="spinner"></div>
+    </div>
+
+    <div id="comments-section" class="mt-3">
+      <h2 class="mb-2">Comments</h2>
+
+      <div class="card mb-2">
+        <form id="comment-form">
+          <div class="form-group">
+            <label class="form-label">Add a comment</label>
+            <textarea id="comment-content" class="form-input" rows="3" placeholder="Share your thoughts..."
+              required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Post Comment</button>
+        </form>
+      </div>
+
+      <div id="comments-list"></div>
+    </div>
+  </main>
+
+  <script src="/js/nav.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    const courseId = window.location.pathname.split('/').pop();
+
+    async function loadCourse() {
+      try {
+        const data = await utils.apiCall(`/api/courses/${courseId}`);
+        const course = data.course;
+        const topics = data.topics || [];
+
+        // Get course image
+        const courseImage = getCourseImage(course.category);
+
+        // Group topics by section
+        const sections = {};
+        topics.forEach(topic => {
+          if (!sections[topic.section_title]) {
+            sections[topic.section_title] = [];
+          }
+          sections[topic.section_title].push(topic);
+        });
+
+        document.getElementById('course-details').innerHTML = `
+          <!-- Course Hero Section -->
+          <div class="card" style="margin-bottom: 2rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;">
+              <div>
+                <div class="course-meta" style="margin-bottom: 1rem;">
+                  <span class="badge badge-primary">${course.category}</span>
+                  <span class="badge badge-success">${course.level}</span>
+                </div>
+                <h1 style="margin-bottom: 1rem; font-size: 2.5rem;">${course.title}</h1>
+                <p style="font-size: 1.125rem; color: var(--text-secondary); margin-bottom: 1.5rem;">${course.description}</p>
+                
+                <div style="display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                  ${course.duration ? `
+                    <div>
+                      <div style="font-size: 0.875rem; color: var(--text-tertiary); margin-bottom: 0.25rem;">Duration</div>
+                      <div style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">⏱️ ${course.duration}</div>
+                    </div>
+                  ` : ''}
+                  ${course.student_count ? `
+                    <div>
+                      <div style="font-size: 0.875rem; color: var(--text-tertiary); margin-bottom: 0.25rem;">Students</div>
+                      <div style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">👥 ${course.student_count.toLocaleString()}</div>
+                    </div>
+                  ` : ''}
+                  ${course.rating ? `
+                    <div>
+                      <div style="font-size: 0.875rem; color: var(--text-tertiary); margin-bottom: 0.25rem;">Rating</div>
+                      <div style="font-size: 1rem; font-weight: 600; color: var(--text-primary);">⭐ ${course.rating}/5.0</div>
+                    </div>
+                  ` : ''}
+                </div>
+
+                <button onclick="enrollInCourse()" class="btn btn-primary btn-large">Enroll Now</button>
+              </div>
+              <div style="border-radius: var(--radius-lg); overflow: hidden; height: 300px; background-image: url('${courseImage}'); background-size: cover; background-position: center;"></div>
+            </div>
+          </div>
+
+          <!-- What You'll Learn -->
+          ${course.learning_outcomes && course.learning_outcomes.length > 0 ? `
+            <div class="card mb-2">
+              <h2 style="margin-bottom: 1.5rem;">What You'll Learn</h2>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                ${course.learning_outcomes.map(outcome => `
+                  <div style="display: flex; gap: 0.75rem; align-items: start;">
+                    <span style="color: var(--primary); font-size: 1.25rem; flex-shrink: 0;">✓</span>
+                    <span style="color: var(--text-secondary);">${outcome}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+
+          <!-- Course Content -->
+          ${topics.length > 0 ? `
+            <div class="card mb-2">
+              <h2 style="margin-bottom: 1.5rem;">Course Content</h2>
+              <div style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                ${Object.keys(sections).length} sections • ${topics.length} lectures • ${calculateTotalDuration(topics)}
+              </div>
+              ${Object.entries(sections).map(([sectionTitle, sectionTopics], index) => `
+                <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); margin-bottom: 1rem; overflow: hidden;">
+                  <div style="background: var(--bg-tertiary); padding: 1rem 1.5rem; font-weight: 600; cursor: pointer;" onclick="toggleSection(${index})">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                      <span>${sectionTitle}</span>
+                      <span style="color: var(--text-secondary); font-size: 0.875rem;">${sectionTopics.length} lectures</span>
+                    </div>
+                  </div>
+                  <div id="section-${index}" style="display: none;">
+                    ${sectionTopics.map(topic => `
+                      <div style="padding: 0.75rem 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: var(--text-secondary);">📄 ${topic.topic_title}</span>
+                        ${topic.duration ? `<span style="color: var(--text-tertiary); font-size: 0.875rem;">${topic.duration}</span>` : ''}
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+
+          <!-- Prerequisites & Instructor -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+            ${course.prerequisites && course.prerequisites.length > 0 ? `
+              <div class="card">
+                <h3 style="margin-bottom: 1rem;">Prerequisites</h3>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                  ${course.prerequisites.map(prereq => `
+                    <li style="padding: 0.5rem 0; color: var(--text-secondary); display: flex; gap: 0.75rem;">
+                      <span style="color: var(--primary);">•</span>
+                      <span>${prereq}</span>
+                    </li>
+                  `).join('')}
+                </ul>
+              </div>
+            ` : ''}
+
+            ${course.instructor_name ? `
+              <div class="card">
+                <h3 style="margin-bottom: 1rem;">Instructor</h3>
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                  <div class="instructor-avatar" style="width: 60px; height: 60px; font-size: 1.5rem;">${course.instructor_name.charAt(0)}</div>
+                  <div>
+                    <div style="font-weight: 600; font-size: 1.125rem; color: var(--text-primary);">${course.instructor_name}</div>
+                    ${course.instructor_title ? `<div style="color: var(--text-secondary); font-size: 0.875rem;">${course.instructor_title}</div>` : ''}
+                  </div>
+                </div>
+                ${course.instructor_bio ? `<p style="color: var(--text-secondary); line-height: 1.6;">${course.instructor_bio}</p>` : ''}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      } catch (error) {
+        document.getElementById('course-details').innerHTML =
+          '<div class="alert alert-error">Failed to load course details</div>';
+      }
+    }
+
+    function getCourseImage(category) {
+      const imageMap = {
+        'web': `https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=450&fit=crop`,
+        'data': `https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=450&fit=crop`,
+        'security': `https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&h=450&fit=crop`,
+        'database': `https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=800&h=450&fit=crop`,
+        'cloud': `https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=450&fit=crop`,
+      };
+      return imageMap[category] || `https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=450&fit=crop`;
+    }
+
+    function calculateTotalDuration(topics) {
+      // Simple calculation - just count topics for now
+      const hours = Math.ceil(topics.length * 1.5);
+      return `${hours} total hours`;
+    }
+
+    function toggleSection(index) {
+      const section = document.getElementById(`section-${index}`);
+      if (section.style.display === 'none') {
+        section.style.display = 'block';
+      } else {
+        section.style.display = 'none';
+      }
+    }
+
+
+    async function loadComments() {
+      try {
+        const data = await utils.apiCall(`/api/comments?course_id=${courseId}`);
+        const container = document.getElementById('comments-list');
+
+        if (data.comments.length === 0) {
+          container.innerHTML = '<p class="text-muted">No comments yet. Be the first to comment!</p>';
+          return;
+        }
+
+        // Safely render comments by escaping HTML
+        container.innerHTML = data.comments.map(comment => {
+          const escapeHtml = (text) => {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+          };
+
+          return `
+          <div class="comment">
+            <div class="comment-author">${escapeHtml(comment.username)}</div>
+            <div class="comment-content">${escapeHtml(comment.content)}</div>
+            <div class="comment-date">${utils.formatDate(comment.created_at)}</div>
+          </div>
+        `;
+        }).join('');
+      } catch (error) {
+        console.error('Failed to load comments:', error);
+      }
+
+    }
+
+    async function enrollInCourse() {
+      try {
+        await utils.apiCall('/api/enroll', {
+          method: 'POST',
+          body: JSON.stringify({ course_id: courseId })
+        });
+        utils.showAlert('Successfully enrolled in course!', 'success');
+      } catch (error) {
+        if (error.message.includes('Authentication required')) {
+          utils.showAlert('Please login to enroll', 'error');
+          setTimeout(() => window.location.href = '/login', 1500);
+        } else {
+          utils.showAlert(error.message, 'error');
+        }
+      }
+    }
+
+    document.getElementById('comment-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const content = document.getElementById('comment-content').value;
+
+      try {
+        await utils.apiCall('/api/comments', {
+          method: 'POST',
+          body: JSON.stringify({ course_id: courseId, content })
+        });
+
+        document.getElementById('comment-content').value = '';
+        utils.showAlert('Comment posted!', 'success');
+        loadComments();
+      } catch (error) {
+        if (error.message.includes('Authentication required')) {
+          utils.showAlert('Please login to comment', 'error');
+        } else {
+          utils.showAlert(error.message, 'error');
+        }
+      }
+    });
+
+    loadCourse();
+    loadComments();
+  </script>
+</body>
+
+</html>

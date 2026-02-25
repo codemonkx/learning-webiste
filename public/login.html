@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - LearnHub</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">⚡ LearnHub</a>
+            <ul class="navbar-menu">
+                <li><a href="/courses.html">Courses</a></li>
+                <li><a href="/search.html">Search</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="/register.html" class="btn btn-primary btn-small">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Form -->
+    <div class="container" style="max-width: 480px; padding-top: 80px; padding-bottom: 80px;">
+        <div
+            style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-2xl);">
+            <div style="text-align: center; margin-bottom: var(--space-xl);">
+                <h1 style="font-size: 2rem; margin-bottom: var(--space-sm);">Welcome Back</h1>
+                <p style="color: var(--text-secondary);">Sign in to continue your learning journey</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" id="username" name="username" class="form-input"
+                        placeholder="Enter your username" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-input"
+                        placeholder="Enter your password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: var(--space-md);">
+                    Sign In →
+                </button>
+            </form>
+
+            <div
+                style="margin-top: var(--space-xl); padding-top: var(--space-lg); border-top: 1px solid var(--border-color); text-align: center;">
+                <p style="color: var(--text-secondary); font-size: 0.9375rem;">
+                    Don't have an account? <a href="/register.html"
+                        style="color: var(--primary); font-weight: 600;">Sign up</a>
+                </p>
+            </div>
+
+            <!-- Test Accounts -->
+            <div
+                style="margin-top: var(--space-xl); padding: var(--space-md); background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+                <p
+                    style="font-size: 0.875rem; font-weight: 600; margin-bottom: var(--space-sm); color: var(--text-primary);">
+                    Test Accounts:</p>
+                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 4px;">Admin: <code
+                        style="background: var(--bg-primary); padding: 2px 6px; border-radius: 4px; color: var(--primary);">admin / admin123</code>
+                </p>
+                <p style="font-size: 0.875rem; color: var(--text-secondary);">Student: <code
+                        style="background: var(--bg-primary); padding: 2px 6px; border-radius: 4px; color: var(--primary);">student / password123</code>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/nav.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    window.location.href = data.redirect || '/dashboard.html';
+                } else {
+                    alert(data.error || 'Login failed');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Login failed. Please try again.');
+            }
+        });
+    </script>
+</body>
+
+</html>

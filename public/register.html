@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - LearnHub</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">⚡ LearnHub</a>
+            <ul class="navbar-menu">
+                <li><a href="/courses.html">Courses</a></li>
+                <li><a href="/search.html">Search</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="/login.html" class="btn btn-secondary btn-small">Sign In</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Register Form -->
+    <div class="container" style="max-width: 480px; padding-top: 80px; padding-bottom: 80px;">
+        <div
+            style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: var(--space-2xl);">
+            <div style="text-align: center; margin-bottom: var(--space-xl);">
+                <h1 style="font-size: 2rem; margin-bottom: var(--space-sm);">Create Account</h1>
+                <p style="color: var(--text-secondary);">Start your learning journey today</p>
+            </div>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" id="username" name="username" class="form-input" placeholder="Choose a username"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" id="email" name="email" class="form-input" placeholder="your@email.com"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-input"
+                        placeholder="Create a strong password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: var(--space-md);">
+                    Create Account →
+                </button>
+            </form>
+
+            <div
+                style="margin-top: var(--space-xl); padding-top: var(--space-lg); border-top: 1px solid var(--border-color); text-align: center;">
+                <p style="color: var(--text-secondary); font-size: 0.9375rem;">
+                    Already have an account? <a href="/login.html" style="color: var(--primary); font-weight: 600;">Sign
+                        in</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/nav.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Registration successful! Please log in.');
+                    window.location.href = '/login.html';
+                } else {
+                    alert(data.error || 'Registration failed');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                alert('Registration failed. Please try again.');
+            }
+        });
+    </script>
+</body>
+
+</html>
