@@ -18,19 +18,26 @@ const securityLogger = require('./middleware/securityLogger');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Security Logging (Early middleware)
+// 1. Logging (Diagnostic)
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} - IP: ${req.ip}`);
+    next();
+});
+
+// 2. Serve static files (MOVE TO TOP to bypass middleware issues)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// 3. Security Logging (Early middleware)
 app.use(securityLogger);
 
-// Security Middleware (Headers)
-app.use(helmet({
-    contentSecurityPolicy: false, // Temporarily disabled for troubleshooting
-}));
+// 4. Disable Helmet for Troubleshooting
+// app.use(helmet()); 
 
-// Middleware
+// 5. Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Session configuration
+// 6. Session configuration
 app.use(session({
     secret: process.env.SESSION_SECRET || 'your_secret_key_change_this',
     resave: false,
@@ -38,14 +45,9 @@ app.use(session({
     cookie: {
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production' // HTTPS only in production
+        secure: process.env.NODE_ENV === 'production' // Set to true if using HTTPS
     }
 }));
-
-
-
-// Serve static files
-app.use(express.static(path.join(__dirname, 'public')));
 
 // API Routes
 app.use('/', authRoutes);
